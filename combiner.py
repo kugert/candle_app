@@ -15,6 +15,7 @@ period_list = [1, 5, 15, 60, 300, 900]
 def save_to_redis(val, period=1):
     key = get_key(val['code'], val['at'], period)
     r_conn.xadd(key, val, id='*')
+    # TODO: need to set expire once when key is created
     r_conn.expire(key, 16*60)
 
 

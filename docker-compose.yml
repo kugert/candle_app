@@ -16,6 +16,7 @@ services:
     build: .
     command: python /code/combiner.py
     environment:
-      - URI=ws://localhost:18081/ws
+      - URI=ws://fake-quotes-svc--emit-websocket:8080/ws
     depends_on:
       - redis
+      - fake-quotes-svc--emit-websocket

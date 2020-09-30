@@ -14,20 +14,14 @@ period_list = [1, 5, 15, 60, 300, 900]
 
 def save_to_redis(val, period=1):
     key = get_key(val['code'], val['at'], period)
-    data = r_conn.get(key)
-
-    if data:
-        data_dict = json.loads(data)
-        data_dict['data'].append(val)
-    else:
-        data_dict = {'data': [val]}
-
-    r_conn.set(key, json.dumps(data_dict))
-    print(f'{key} -> {r_conn.get(key)}\n\n')
+    r_conn.xadd(key, val, id='*')
+    r_conn.expire(key, 16*60)
 
 
 def get_from_redis(key):
-    return r_conn.get(key)
+    # rv: list of tuples.
+    # Sample: [(b'1601465569624-0', {b'code': b'GBP/JPY', b'bid': b'43.77702805758552', b'ask': b'44.00702805758552', b'at': b'1601465569'})]
+    return r_conn.xrange(key, min='-', max='+')
 
 
 def get_key(code, at, period):

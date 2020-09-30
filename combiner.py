@@ -1,18 +1,18 @@
+import os
 import json
 import asyncio
 import websockets
 import redis
 import concurrent.futures as treading
 
+# default_uri = 'ws://localhost:18081/ws'
+URI = os.environ.get('URI')
 
-URI = 'ws://localhost:18081/ws'
-
-
-r = redis.Redis(host='localhost', port=6379, db=0)
+r_conn = redis.Redis(host='redis', port=6379)
 period_list = [1, 5, 15, 60, 300, 900]
 
 
-def save_to_redis(r_conn, val, period=1):
+def save_to_redis(val, period=1):
     key = get_key(val['code'], val['at'], period)
     data = r_conn.get(key)
 
@@ -23,10 +23,10 @@ def save_to_redis(r_conn, val, period=1):
         data_dict = {'data': [val]}
 
     r_conn.set(key, json.dumps(data_dict))
-    # print(f'{key} -> {r_conn.get(key)}\n\n')
+    print(f'{key} -> {r_conn.get(key)}\n\n')
 
 
-def get_from_redis(r_conn, key):
+def get_from_redis(key):
     return r_conn.get(key)
 
 
@@ -43,8 +43,10 @@ async def main(uri):
             server_data = json.loads(msg)
             # print(f'{server_data}')
             with treading.ThreadPoolExecutor() as executor:
-                executor.map(lambda x: save_to_redis(
-                    r, server_data, x), period_list)
+                executor.map(
+                    lambda x: save_to_redis(server_data, x),
+                    period_list
+                )
 
 
 if __name__ == "__main__":

@@ -1,0 +1,17 @@
+version: '3.7'
+
+services:
+  py:
+    build: .
+    command: python /code/combiner.py
+    environment:
+      - URI=ws://fake-quotes-svc--emit-websocket:18081/ws
+    networks:
+      - fake-quotes-svc_default
+  redis:
+    image: "redis:alpine"
+
+networks:
+  fake-quotes-svc_default:
+    external: true
+

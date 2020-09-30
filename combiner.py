@@ -8,7 +8,7 @@ import concurrent.futures as treading
 # default_uri = 'ws://localhost:18081/ws'
 URI = os.environ.get('URI')
 
-r_conn = redis.Redis(host='redis', port=6379)
+r_conn = redis.Redis(host='redis', port=6379, db=0)
 period_list = [1, 5, 15, 60, 300, 900]
 
 

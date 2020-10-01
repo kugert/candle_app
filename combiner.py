@@ -49,6 +49,7 @@ def data_flush():
         for _code in CODES:
             key_list += [get_key(_code, max_age, x) for x in PERIODS]
         [r_conn.delete(_k) for _k in set(key_list)]
+        sleep(0.75)
 
 
 def get_key(code, at, period):

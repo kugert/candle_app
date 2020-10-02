@@ -14,7 +14,7 @@ services:
 
   py:
     build: .
-    command: python /code/combiner.py
+    command: python /code/main.py
     environment:
       - URI=ws://fake-quotes-svc--emit-websocket:8080/ws
     depends_on:

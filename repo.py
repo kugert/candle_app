@@ -1,6 +1,7 @@
 import redis
 
 from time import time
+from domain import Quote
 
 
 class CandleRepository:
@@ -11,20 +12,21 @@ class CandleRepository:
 
     # Public methods
 
-    def get(self, from_at, period) -> list:
+    def get(self, from_at, period) -> Quote:
         rv = []
         key_list = [self.__get_key(_code, from_at, period)
                     for _code in self.codes]
         for key in key_list:
             rv += self.__get_from_redis(key)
-        return rv
+        return Quote(redis_data=rv)
 
-    def store(self, val, period):
+    def store(self, quote: Quote, period) -> None:
+        val = quote.stream_data
         key = self.__get_key(val['code'], val['at'], period)
         self.__redis_conn.xadd(key, val, id='*')
-        print(f'rv: {self.get(val["at"], period)}')
+        # print(f'rv: {self.get(val["at"], period)}')
 
-    def clear(self):
+    def clear(self) -> None:
         key_list = []
         for _code in self.codes:
             key_list += [self.__get_key(_code, self.__clear_before, x)

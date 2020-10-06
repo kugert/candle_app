@@ -1,6 +1,7 @@
 import os
 import json
 import websockets
+from domain import Quote
 
 
 class IncomeWebSocketStream:
@@ -10,7 +11,7 @@ class IncomeWebSocketStream:
     async def get_next(self):
         msg = await self.ws.recv()
         data = json.loads(msg)
-        return data
+        return Quote(stream_data=data)
 
 
 class IncomeRabbitStream:

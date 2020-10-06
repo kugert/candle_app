@@ -14,17 +14,17 @@ class IncomeWebSocketStream:
     def __init__(self, ws_connect):
         self.ws = ws_connect
 
-    async def get_next(self, candle: CandleRepository):
+    async def get_next(self, candle_repo: CandleRepository):
         msg = await self.ws.recv()
         data = json.loads(msg)
 
-        if data.get('code') and data['code'] not in candle.codes:
-            candle.codes.append(data['code'])
+        if data.get('code') and data['code'] not in candle_repo.codes:
+            candle_repo.codes.append(data['code'])
 
         with treading.ThreadPoolExecutor() as executor:
             executor.map(
-                lambda x: candle.store(data, x),
-                candle.periods
+                lambda x: candle_repo.store(data, x),
+                candle_repo.periods
             )
 
 

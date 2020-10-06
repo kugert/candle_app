@@ -22,7 +22,7 @@ class CandleRepository:
     def store(self, val, period):
         key = self.__get_key(val['code'], val['at'], period)
         self.__redis_conn.xadd(key, val, id='*')
-        # print(f'rv: {self.get(val["at"], period)}')
+        print(f'rv: {self.get(val["at"], period)}')
 
     def clear(self):
         key_list = []

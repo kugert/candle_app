@@ -4,25 +4,16 @@ import websockets
 
 from unsync import unsync
 from repo import CandleRepository
-import concurrent.futures as treading
 
 
 class IncomeWebSocketStream:
     def __init__(self, ws_connect):
         self.ws = ws_connect
 
-    async def get_next(self, candle_repo: CandleRepository):
+    async def get_next(self):
         msg = await self.ws.recv()
         data = json.loads(msg)
-
-        if data.get('code') and data['code'] not in candle_repo.codes:
-            candle_repo.codes.append(data['code'])
-
-        with treading.ThreadPoolExecutor() as executor:
-            executor.map(
-                lambda x: candle_repo.store(data, x),
-                candle_repo.periods
-            )
+        return data
 
 
 class IncomeRabbitStream:

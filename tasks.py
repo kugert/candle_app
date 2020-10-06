@@ -1,5 +1,6 @@
 import json
 import websockets
+import concurrent.futures as treading
 
 from unsync import unsync
 from time import sleep
@@ -12,7 +13,16 @@ async def save_data(candle_repo: CandleRepository, uri: str):
     async with websockets.connect(uri) as ws:
         ws_stream = IncomeWebSocketStream(ws)
         while True:
-            await ws_stream.get_next(candle_repo)
+            data = await ws_stream.get_next()
+
+            if data.get('code') and data['code'] not in candle_repo.codes:
+                candle_repo.codes.append(data['code'])
+
+            with treading.ThreadPoolExecutor() as executor:
+                executor.map(
+                    lambda x: candle_repo.store(data, x),
+                    candle_repo.periods
+                )
 
 
 @unsync

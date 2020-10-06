@@ -4,7 +4,7 @@ from time import time
 from domain import Quote
 
 
-class CandleRepository:
+class QuoteRepository:
     def __init__(self, redis_connection: redis.Redis, periods: list = [1, 5, 15, 60, 300, 900]):
         self.__redis_conn = redis_connection
         self.periods = periods

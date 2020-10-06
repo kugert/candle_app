@@ -14,10 +14,9 @@ async def save_data(candle_repo: CandleRepository, uri: str):
         ws_stream = IncomeWebSocketStream(ws)
         while True:
             quote = await ws_stream.get_next()
-            data = quote.stream_data
 
-            if data.get('code') and data['code'] not in candle_repo.codes:
-                candle_repo.codes.append(data['code'])
+            if quote.code and quote.code not in candle_repo.codes:
+                candle_repo.codes.append(quote.code)
 
             with treading.ThreadPoolExecutor() as executor:
                 executor.map(

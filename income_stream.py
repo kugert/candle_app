@@ -6,12 +6,15 @@ from domain import Quote
 
 class IncomeWebSocketStream:
     def __init__(self, ws_connect):
-        self.ws = ws_connect
+        self.__ws = ws_connect
 
-    async def get_next(self):
-        msg = await self.ws.recv()
+    async def get_next(self) -> Quote:
+        msg = await self.__ws.recv()
         data = json.loads(msg)
-        return Quote(stream_data=data)
+        rv = Quote(code=data.get('code', ''),
+                   value=data,
+                   at=data.get('at', 0))
+        return rv
 
 
 class IncomeRabbitStream:

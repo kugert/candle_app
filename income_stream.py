@@ -7,9 +7,6 @@ from repo import CandleRepository
 import concurrent.futures as treading
 
 
-URI = os.environ.get('URI')
-
-
 class IncomeWebSocketStream:
     def __init__(self, ws_connect):
         self.ws = ws_connect

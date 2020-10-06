@@ -4,12 +4,12 @@ import websockets
 from unsync import unsync
 from time import sleep
 from repo import CandleRepository
-from income_stream import URI, IncomeWebSocketStream
+from income_stream import IncomeWebSocketStream
 
 
 @unsync
-async def save_data(candle_repo: CandleRepository):
-    async with websockets.connect(URI) as ws:
+async def save_data(candle_repo: CandleRepository, uri: str):
+    async with websockets.connect(uri) as ws:
         ws_stream = IncomeWebSocketStream(ws)
         while True:
             await ws_stream.get_next(candle_repo)

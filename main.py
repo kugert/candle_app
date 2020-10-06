@@ -1,7 +1,10 @@
+import os
 import time
 from redis import Redis
 from repo import CandleRepository
 from tasks import save_data, clear_data
+
+URI = os.environ.get('URI')
 
 
 def main():
@@ -9,7 +12,7 @@ def main():
     candle_repo = CandleRepository(redis_conn)
 
     tasks = [
-        save_data(candle_repo),
+        save_data(candle_repo, URI),
         clear_data(candle_repo, 0.5)
     ]
 

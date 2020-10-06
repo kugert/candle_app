@@ -2,9 +2,6 @@ import os
 import json
 import websockets
 
-from unsync import unsync
-from repo import CandleRepository
-
 
 class IncomeWebSocketStream:
     def __init__(self, ws_connect):

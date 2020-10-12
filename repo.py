@@ -19,13 +19,14 @@ class QuoteRepository:
         for key in key_list:
             redis_data += self.__get_from_redis(key)
 
-        rv = [Quote(code=x.get('code', ''), value=x, at=x.get('at', 0))
+        rv = [Quote(code=x.get('code', ''), value=x.get('value', ''), at=x.get('at', 0))
               for x in redis_data]
         return rv
 
     def store(self, quote: Quote, period) -> None:
         key = self.__get_key(quote.code, quote.at, period)
-        self.__redis_conn.xadd(key, quote.value, id='*')
+        data = {'code': quote.code, 'value': quote.value, 'at': quote.at}
+        self.__redis_conn.xadd(key, data, id='*')
 
     def clear(self) -> None:
         key_list = []

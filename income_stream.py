@@ -12,7 +12,7 @@ class IncomeWebSocketStream:
         msg = await self.__ws.recv()
         data = json.loads(msg)
         rv = Quote(code=data.get('code', ''),
-                   value=data,
+                   value=data.get('value', ''),
                    at=data.get('at', 0))
         return rv
 

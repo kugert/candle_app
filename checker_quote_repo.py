@@ -6,7 +6,7 @@ from redis import Redis
 from domain import Quote
 
 
-def main():
+def timestamp_amount_checker():
     date = datetime(2020, 7, 16, 12, 0, 0)
     timestamp = int(datetime.timestamp(date)) - 1
     r_conn = Redis(host='localhost', port=6379, db=0)
@@ -32,4 +32,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    timestamp_amount_checker()
